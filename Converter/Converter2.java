@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.text.DecimalFormat;
 
 public class Converter2 extends JFrame{
 
@@ -26,8 +27,7 @@ public class Converter2 extends JFrame{
   private Boolean eur = true;
 
   public Converter2(){
-    NumberFormat format = NumberFormat.getInstance();//On n'affiche que 2 chiffres après la virgule
-    format.setMaximumFractionDigits(2);
+
 
     this.setTitle("Convertisseur");
     this.setSize(300, 170);
@@ -51,14 +51,14 @@ public class Converter2 extends JFrame{
 
     textField.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        textField2.setText(""+format.format(taux*(Double.parseDouble(textField.getText()))));
+        maj2(textField2,textField);
         eur = true;
       }
     });
 
     textField2.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        textField.setText(""+format.format((1/taux)*(Double.parseDouble(textField2.getText()))));
+        maj1(textField,textField2);
         eur = false;
       }
     });
@@ -79,9 +79,9 @@ public class Converter2 extends JFrame{
       public void actionPerformed(ActionEvent e) {
         setTaux(Double.parseDouble(textField3.getText()));
         if (eur)
-          textField2.setText(""+format.format(taux*(Double.parseDouble(textField.getText()))));
+          maj2(textField2,textField);
         else
-          textField.setText(""+format.format((1/taux)*(Double.parseDouble(textField2.getText()))));
+          maj1(textField,textField2);
       }
     });
 
@@ -148,10 +148,24 @@ public class Converter2 extends JFrame{
 
   }
 
+  public void maj1(JTextField j1, JTextField j2){
+    j1.setText((""+ initFormat().format(toEuros(Double.parseDouble(j2.getText())))).replace(',', '.'));
+  }
 
 
 
 
+  public void maj2(JTextField j1, JTextField j2){
+    j1.setText((""+ initFormat().format(toDollars(Double.parseDouble(j2.getText())))).replace(',', '.'));
+  }
+
+  public DecimalFormat initFormat(){
+
+      DecimalFormat df = new DecimalFormat("#.00");
+      df.setMaximumFractionDigits(5); //arrondi à 2 chiffres apres la virgules
+      df.setMinimumFractionDigits(0);
+      return df;
+  }
 
 
 
